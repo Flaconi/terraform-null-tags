@@ -1,6 +1,7 @@
 # Microservice Boilerplate
 
-[![Build Status](https://travis-ci.com/Flaconi/terraform-terraform-project-tags.svg?branch=master)](https://travis-ci.com/Flaconi/terraform-terraform-project-tags)
+[![Lint Status](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/linting.yml/badge.svg?branch=master)](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/linting.yml)
+[![Docs Status](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/terraform-docs.yml/badge.svg?branch=master)](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/terraform-docs.yml)
 [![Tag](https://img.shields.io/github/tag/Flaconi/terraform-terraform-project-tags.svg)](https://github.com/Flaconi/terraform-terraform-project-tags/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
