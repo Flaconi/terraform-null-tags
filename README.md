@@ -103,17 +103,27 @@ inputs = {
 
 No resources are created.
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | ~> 0.12.0 |
+
+## Providers
+
+No provider.
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| additional\_tag\_map | Additional tags for appending to each tag map | map(string) | `{}` | no |
-| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `""` | no |
-| parent | Parent folder | string | `""` | no |
-| project | Solution name, e.g. 'app' or 'jenkins' | string | `""` | no |
-| region | Region, e.g. 'eu-west-1', 'eu-central-1' | string | `""` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map(string) | `{}` | no |
-| terraform\_provider | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | string | `""` | no |
+|------|-------------|------|---------|:--------:|
+| additional\_tag\_map | Additional tags for appending to each tag map | `map(string)` | `{}` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
+| parent | Parent folder | `string` | `""` | no |
+| project | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
+| region | Region, e.g. 'eu-west-1', 'eu-central-1' | `string` | `""` | no |
+| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
+| terraform\_provider | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
 
 ## Outputs
 
