@@ -108,30 +108,38 @@ No resources are created.
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12 |
 
 ## Providers
 
-No provider.
+No providers.
+
+## Modules
+
+No modules.
+
+## Resources
+
+No resources.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| additional\_tag\_map | Additional tags for appending to each tag map | `map(string)` | `{}` | no |
-| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
-| parent | Parent folder | `string` | `""` | no |
-| project | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
-| region | Region, e.g. 'eu-west-1', 'eu-central-1' | `string` | `""` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
-| terraform\_provider | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
+| <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional tags for appending to each tag map | `map(string)` | `{}` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
+| <a name="input_parent"></a> [parent](#input\_parent) | Parent folder | `string` | `""` | no |
+| <a name="input_project"></a> [project](#input\_project) | Solution name, e.g. 'app' or 'jenkins' | `string` | `""` | no |
+| <a name="input_region"></a> [region](#input\_region) | Region, e.g. 'eu-west-1', 'eu-central-1' | `string` | `""` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
+| <a name="input_terraform_provider"></a> [terraform\_provider](#input\_terraform\_provider) | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| tags | Normalized Tag map |
-| tags\_as\_list\_of\_maps | Additional tags as a list of maps, which can be used in several AWS resources |
+| <a name="output_tags"></a> [tags](#output\_tags) | Normalized Tag map |
+| <a name="output_tags_as_list_of_maps"></a> [tags\_as\_list\_of\_maps](#output\_tags\_as\_list\_of\_maps) | Additional tags as a list of maps, which can be used in several AWS resources |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
