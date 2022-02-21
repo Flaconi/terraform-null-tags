@@ -1,8 +1,9 @@
-# Microservice Boilerplate
+# Tags Module
 
-[![Lint Status](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/linting.yml/badge.svg?branch=master)](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/linting.yml)
-[![Docs Status](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/terraform-docs.yml/badge.svg?branch=master)](https://github.com/Flaconi/terraform-terraform-project-tags/actions/workflows/terraform-docs.yml)
-[![Tag](https://img.shields.io/github/tag/Flaconi/terraform-terraform-project-tags.svg)](https://github.com/Flaconi/terraform-terraform-project-tags/releases)
+[![Lint Status](https://github.com/Flaconi/terraform-null-tags/actions/workflows/linting.yml/badge.svg?branch=master)](https://github.com/Flaconi/terraform-null-tags/actions/workflows/linting.yml)
+[![Docs Status](https://github.com/Flaconi/terraform-null-tags/actions/workflows/terraform-docs.yml/badge.svg)](https://github.com/Flaconi/terraform-null-tags/actions/workflows/terraform-docs.yml)
+[![Tag](https://img.shields.io/github/tag/Flaconi/terraform-null-tags.svg)](https://github.com/Flaconi/terraform-null-tags/releases)
+[![Terraform](https://img.shields.io/badge/Terraform--registry-null--tags-brightgreen.svg)](https://registry.terraform.io/modules/Flaconi/tags/null/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 This Terraform module helps to create a unified tagging across different projects.
@@ -10,29 +11,66 @@ This Terraform module helps to create a unified tagging across different project
 ## Usage
 
 ### Typical Folder structure within a Terraform Project:
+
 ```
 .
 ├── lambda-security-group
-│   └── terragrunt.hcl
-├── project-tags
-│   └── terragrunt.hcl
+│   └── terragrunt.hcl
 ├── redis
-│   └── terragrunt.hcl
+│   └── terragrunt.hcl
 ├── redis-security-group
-│   └── terragrunt.hcl
-└── terraform-aws-ssm-store
+│   └── terragrunt.hcl
+├── ssm-store
+│   └── terragrunt.hcl
+└── tags
     └── terragrunt.hcl
 ```
 
-### Typical terragrunt.hcl of project-tags
+### Typical terragrunt.hcl of project tags (initialization)
+
+```hcl
+terraform {
+  source  = "Flaconi/tags/null"
+}
+
+include {
+  path = find_in_parent_folders()
+}
+
+locals {
+  # It could be simplified if terragrunt implement this: https://github.com/gruntwork-io/terragrunt/pull/858
+  default_yaml_path = find_in_parent_folders("empty.yml")
+  global_vars       = yamldecode(file(find_in_parent_folders("global_vars.yml", local.default_yaml_path)))
+  provider_vars     = yamldecode(file(find_in_parent_folders("provider_vars.yml", local.default_yaml_path)))
+  region_vars       = yamldecode(file(find_in_parent_folders("region_vars.yml", local.default_yaml_path)))
+  stack_vars        = yamldecode(file(find_in_parent_folders("stack_vars.yml", local.default_yaml_path)))
+
+  vars = merge(
+    local.global_vars,
+    local.provider_vars,
+    local.region_vars,
+    local.stack_vars
+  )
+}
+
+inputs = {
+  parent      = ""
+  project     = basename(dirname(abspath(get_terragrunt_dir())))
+  provider    = local.vars.our_provider
+  environment = local.vars.env
+  tags        = local.vars.global_tags
+}
 ```
+
+### Example terragrunt.hcl of project tags inheritance (`lambda-security-group`)
+
+```hcl
 dependency "vpc" {
   config_path = "../../../infra/vpc"
 }
 
-
-dependency "project-tags" {
-  config_path = "../project-tags"
+dependency "tags" {
+  config_path = "../tags"
 }
 
 terraform {
@@ -43,26 +81,36 @@ include {
   path = find_in_parent_folders()
 }
 
-
 locals {
+  app_name = basename(dirname(abspath(get_terragrunt_dir())))
 }
-
 
 inputs = {
   vpc_id = dependency.vpc.outputs.vpc_id
 
+  name        = "${local.app_name}-lambda-sg"
+  description = "Security group for lambda (${local.app_name}) with allow outgoing all"
+
+  egress_with_cidr_blocks = [
+    {
+      rule        = "all-all"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+
+  tags = dependency.tags.outputs.tags
 }
 ```
 
-### Typical terragrunt.hcl of project-tags
+### Example terragrunt.hcl of project tags inheritance (`redis-security-group`)
 
-```
+```hcl
 dependency "vpc" {
   config_path = "../../../infra/vpc"
 }
 
-dependency "project-tags" {
-  config_path = "../project-tags"
+dependency "tags" {
+  config_path = "../tags"
 }
 
 dependency "lambda-security-group" {
@@ -77,16 +125,15 @@ include {
   path = find_in_parent_folders()
 }
 
-
 locals {
+    app_name = basename(dirname(abspath(get_terragrunt_dir())))
 }
-
 
 inputs = {
   vpc_id = dependency.vpc.outputs.vpc_id
 
-  name        = "brands-api-redis-sg"
-  description = "Security group for Redis brands-api"
+  name        = "${local.app_name}-redis-sg"
+  description = "Security group for Redis (${local.app_name})"
 
   computed_ingress_with_source_security_group_id = [
     {
@@ -96,7 +143,7 @@ inputs = {
   ]
   number_of_computed_ingress_with_source_security_group_id = 1
 
-  tags = dependency.project-tags.outputs.tags
+  tags = dependency.tags.outputs.tags
 }
 ```
 
@@ -148,4 +195,4 @@ No resources.
 
 [MIT](LICENSE)
 
-Copyright (c) 2019 [Flaconi GmbH](https://github.com/Flaconi)
+Copyright (c) 2019-2022 [Flaconi GmbH](https://github.com/Flaconi)
